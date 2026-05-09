@@ -1,0 +1,66 @@
+:root {
+  color-scheme: dark;
+  --cleaner-bg: #07131a;
+  --cleaner-surface: #0f202b;
+  --cleaner-surface-2: #173241;
+  --cleaner-surface-3: #20485c;
+  --cleaner-border: rgba(148, 199, 221, 0.2);
+  --cleaner-border-strong: rgba(148, 199, 221, 0.4);
+  --cleaner-text: #e8f4fa;
+  --cleaner-text-muted: #96b4c2;
+  --cleaner-accent: #44d6b5;
+  --cleaner-accent-2: #6bc5ff;
+  --cleaner-danger: #ff6e63;
+  --cleaner-warning: #f6c76f;
+  --cleaner-success: #73e39d;
+  --cleaner-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+  --cleaner-radius-lg: 18px;
+  --cleaner-radius-md: 12px;
+  --cleaner-radius-sm: 9px;
+  --cleaner-font: "Segoe UI", "SF Pro Text", "Helvetica Neue", sans-serif;
+  --cleaner-mono: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--cleaner-font);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(107, 197, 255, 0.9);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(148, 199, 221, 0.28);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
