@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT Cleaner</title>
+    <link rel="stylesheet" href="../styles/shared.css" />
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">ChatGPT Cleaner</p>
+          <h1>Bulk Conversation Manager</h1>
+        </div>
+        <span id="connectionBadge" class="status-badge status-muted">Checking</span>
+      </header>
+
+      <section class="panel stats-grid">
+        <article class="stat-card">
+          <span class="stat-label">Total</span>
+          <strong id="totalChatsStat">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Selected</span>
+          <strong id="selectedChatsStat">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Processed</span>
+          <strong id="processedStat">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Failed</span>
+          <strong id="failedStat">0</strong>
+        </article>
+      </section>
+
+      <section class="panel controls-panel">
+        <div class="field-group">
+          <label for="keywordInput">Keyword</label>
+          <input id="keywordInput" type="search" placeholder="Filter titles or IDs" />
+        </div>
+
+        <div class="row-fields">
+          <div class="field-group">
+            <label for="sortSelect">Sort</label>
+            <select id="sortSelect">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="title">Title A-Z</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="archiveModeSelect">Archive</label>
+            <select id="archiveModeSelect">
+              <option value="all">All chats</option>
+              <option value="active">Active only</option>
+              <option value="archived">Archived only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="action-layout">
+          <div class="action-stack">
+            <button id="scanButton" class="btn btn-secondary">Scan</button>
+            <button id="pauseButton" class="btn btn-secondary">Pause</button>
+            <button id="resumeButton" class="btn btn-secondary">Resume</button>
+          </div>
+          <div class="action-stack action-stack-danger">
+            <button id="deleteButton" class="btn btn-danger">Delete</button>
+            <button id="deleteAllButton" class="btn btn-danger-soft">Delete all</button>
+            <button id="stopButton" class="btn btn-warning">Stop</button>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="invertSelectionButton" class="btn btn-ghost">Invert filtered</button>
+          <button id="clearSelectionButton" class="btn btn-ghost">Clear</button>
+          <button id="retryFailedButton" class="btn btn-ghost">Retry failed</button>
+        </div>
+      </section>
+
+      <section class="panel progress-panel">
+        <div class="progress-header">
+          <div>
+            <strong id="operationStateLabel">Idle</strong>
+            <p id="scanMetaText" class="muted">Waiting for scan</p>
+          </div>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-metrics">
+          <span id="progressSummaryText">0 processed</span>
+          <span id="successFailureText">0 success / 0 failed</span>
+        </div>
+      </section>
+
+      <section class="panel chat-panel">
+        <div class="panel-header">
+          <strong>Conversations</strong>
+          <span id="conversationCountPill" class="pill">0 visible</span>
+        </div>
+        <div id="chatList" class="chat-list"></div>
+      </section>
+
+      <footer class="app-footer">
+        <p>&copy; Code and crafted by <span>Prabhakar Singh</span></p>
+      </footer>
+
+    </div>
+
+    <div id="confirmModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card">
+        <h2>Confirm bulk delete</h2>
+        <p id="confirmMessage">
+          This will delete the selected conversations from your ChatGPT history.
+        </p>
+        <div class="modal-actions">
+          <button id="confirmDeleteButton" class="btn btn-danger">Delete now</button>
+          <button id="cancelDeleteButton" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/utils.js"></script>
+    <script src="../scripts/state.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/logger.js"></script>
+    <script src="../scripts/filters.js"></script>
+    <script src="./popup.js"></script>
+  </body>
+</html>
