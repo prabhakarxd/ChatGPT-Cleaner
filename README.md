@@ -158,9 +158,6 @@ Run the scan again after the ChatGPT sidebar has had a moment to settle. The ext
 
 `Delete all` needs at least one visible chat after filters are applied. If the current filter returns zero chats, the button stays disabled.
 
-### UI fallback stops working
-
-ChatGPT may have changed menu labels or structure. Review and update the selector list in `scripts/selectors.js`.
 
 ## Local Development Process
 
