@@ -35,7 +35,8 @@
     downloadJson: "cleaner/download-json",
     notify: "cleaner/notify",
     runtimeUpdated: "cleaner/runtime-updated",
-    logAdded: "cleaner/log-added"
+    logAdded: "cleaner/log-added",
+    apiFetch: "cleaner/api-fetch"
   };
 
   const LIMITS = {
@@ -47,11 +48,11 @@
 
   const DEFAULT_SETTINGS = {
     operation: {
-      batchSize: 5,
-      delayMs: 700,
-      batchCooldownMs: 1500,
+      batchSize: 3,
+      delayMs: 1200,
+      batchCooldownMs: 3000,
       retries: 3,
-      retryBaseDelayMs: 900,
+      retryBaseDelayMs: 2000,
       dryRun: false,
       exportBeforeDelete: true,
       confirmationRequired: true

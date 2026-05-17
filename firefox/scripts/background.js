@@ -67,7 +67,40 @@
       };
     }
 
+    if (message.type === state.MESSAGE_TYPES.apiFetch) {
+      return handleApiFetch(message.payload || {});
+    }
+
     return null;
+  }
+
+  async function handleApiFetch(payload) {
+    const { url, options, maxRetries = 4, baseDelayMs = 2500 } = payload;
+    let attempt = 0;
+    while (true) {
+      const response = await fetch(url, options);
+
+      if (response.status === 429 && attempt < maxRetries) {
+        attempt++;
+        const delay = baseDelayMs * Math.pow(2, attempt - 1);
+        await utils.sleep(delay);
+        continue;
+      }
+
+      if (!response.ok) {
+        const text = await response.text();
+        const body = utils.safeJsonParse(text, null);
+        const detail = body && (body.detail || body.message || body.error);
+        throw new Error(detail || ("API request failed with status " + response.status));
+      }
+
+      if (response.status === 204) {
+        return null;
+      }
+
+      const text = await response.text();
+      return text ? utils.safeJsonParse(text, {}) : {};
+    }
   }
 
   utils.browserApi.runtime.onInstalled.addListener(() => {

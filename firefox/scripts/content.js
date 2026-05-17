@@ -218,18 +218,33 @@
       controller.runtimeState.settings = settings;
       controller.runtimeState.filters = filters;
 
-      const [apiProbe, activeResult, archivedResult, domResult] = await Promise.allSettled([
-        api.probeApi(),
-        api.fetchAllConversationMetadata({ isArchived: false }),
-        api.fetchAllConversationMetadata({ isArchived: true }),
-        scanSidebarDom(settings)
-      ]);
+      let apiProbe = { status: "rejected" };
+      let activeResult = { status: "rejected" };
+      let archivedResult = { status: "rejected" };
+      
+      const domResult = await scanSidebarDom(settings);
+
+      // Only aggressively hit the API if the user explicitly clicked "Scan"
+      if (reason === "manual") {
+        const results = await Promise.allSettled([
+          api.probeApi(),
+          api.fetchAllConversationMetadata({ isArchived: false }),
+          api.fetchAllConversationMetadata({ isArchived: true })
+        ]);
+        apiProbe = results[0];
+        activeResult = results[1];
+        archivedResult = results[2];
+      } else {
+        // Just probe to see if API is available, no aggressive fetching
+        const results = await Promise.allSettled([api.probeApi()]);
+        apiProbe = results[0];
+      }
 
       const apiAvailable = apiProbe.status === "fulfilled" && apiProbe.value === true;
       const activeItems = activeResult.status === "fulfilled" ? activeResult.value : [];
       const archivedItems = archivedResult.status === "fulfilled" ? archivedResult.value : [];
-      const domItems = domResult.status === "fulfilled" ? domResult.value.items : [];
-      const sidebarDetected = domResult.status === "fulfilled" ? domResult.value.sidebarDetected : false;
+      const domItems = domResult.items || [];
+      const sidebarDetected = domResult.sidebarDetected || false;
       const mergedConversations = mergeConversationSources(activeItems.concat(archivedItems), domItems);
       const availableIds = new Set(mergedConversations.map((chat) => chat.id));
 

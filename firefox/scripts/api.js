@@ -8,6 +8,7 @@
   }
 
   const utils = root.utils;
+  const state = root.state;
 
   const sessionCache = {
     token: "",
@@ -65,7 +66,7 @@
     return new Error(detail || ("API request failed with status " + response.status));
   }
 
-  async function apiFetch(path, options) {
+  async function apiFetch(path, options, maxRetries = 4, baseDelayMs = 2500) {
     const requestOptions = Object.assign(
       {
         method: "GET",
@@ -76,19 +77,23 @@
     );
 
     requestOptions.headers = await createHeaders(requestOptions.headers);
+    const url = new URL(path, getOrigin()).toString();
 
-    const response = await global.fetch(new URL(path, getOrigin()).toString(), requestOptions);
+    const response = await utils.browserApi.runtime.sendMessage({
+      type: state.MESSAGE_TYPES.apiFetch,
+      payload: {
+        url,
+        options: requestOptions,
+        maxRetries,
+        baseDelayMs
+      }
+    });
 
-    if (!response.ok) {
-      throw await readResponseError(response);
+    if (!response || !response.ok) {
+      throw new Error((response && response.error) || "API request failed in background");
     }
 
-    if (response.status === 204) {
-      return null;
-    }
-
-    const text = await response.text();
-    return text ? utils.safeJsonParse(text, {}) : {};
+    return response.data;
   }
 
   function normalizeConversationItem(item, archivedOverride) {
@@ -182,6 +187,10 @@
 
       offset += page.items.length;
       pageCount += 1;
+
+      if (pageCount < 200) {
+        await utils.sleep(800);
+      }
     }
 
     return records;
